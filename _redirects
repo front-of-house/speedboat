@@ -1,0 +1,2 @@
+/api/:path /.netlify/functions/:path 200
+/api/:version/:resource/* /.netlify/functions/:version-:resource-:splat 200
