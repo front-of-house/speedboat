@@ -7,7 +7,7 @@ const { NODE_ENV } = process.env;
 
 module.exports = {
   output: {
-    libraryTarget: "commonjs",
+    libraryTarget: "commonjs2",
     filename: "[name].js",
   },
   mode: NODE_ENV === "production" ? "production" : "development",
@@ -16,8 +16,8 @@ module.exports = {
     console: false,
     global: true,
     process: true,
-    __filename: "mock",
-    __dirname: "mock",
+    __filename: true,
+    __dirname: true,
     Buffer: true,
     setImmediate: true,
   },
@@ -62,5 +62,10 @@ module.exports = {
   plugins: [new webpack.DefinePlugin(readEnv("PUBLIC"))],
   optimization: {
     minimize: false,
+  },
+  externals: {
+    knex: 'knex',
+    bookshelf: 'bookshelf',
+    pg: 'pg',
   },
 };
