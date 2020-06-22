@@ -12,10 +12,14 @@
     "bookshelf": "^1.2.0",
     "knex": "^0.21.1",
     "pg": "^8.2.1",
-    "sqlite3": "^4.2.0"
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^4.2.0",
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@babel/core": "^7.10.3",
+    "@babel/plugin-proposal-class-properties": "^7.10.1",
+    "@babel/plugin-proposal-decorators": "^7.10.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.10.3",
     "@babel/plugin-transform-async-to-generator": "^7.10.1",
     "@babel/preset-env": "^7.10.3",
@@ -25,6 +29,7 @@
     "@types/aws-lambda": "^8.10.56",
     "@types/bookshelf": "^1.1.0",
     "@types/node": "^14.0.13",
+    "aws-sdk": "^2.701.0",
     "babel-loader": "^8.1.0",
     "better-sqlite3": "^7.1.0",
     "core-js": "^3.6.5",

@@ -1,15 +1,12 @@
+import "reflect-metadata";
 import { APIGatewayProxyHandler } from 'aws-lambda'
 
-import { MagicLink } from '@/db/models/MagicLink.ts';
+import { getConnection } from '@/db/connection.ts';
+import { MagicLink } from '@/db/entity/MagicLink.ts';
 
 export const handler: APIGatewayProxyHandler = async (event, context) => {
-  const link = await MagicLink.forge({
-    email: 'eric@gmail.com',
-    token: 'a',
-    browser_id: 'b',
-    expires_at: Date.now() + (5 * 60 * 1000),
-  }).save();
-  console.log(link.toJSON());
+  const connection = await getConnection();
+  // console.log(connection.getRepository(MagicLink));
 
   return {
     statusCode: 200,

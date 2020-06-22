@@ -47,6 +47,11 @@ module.exports = {
               plugins: [
                 "@babel/plugin-proposal-object-rest-spread",
                 "@babel/plugin-transform-async-to-generator",
+                [
+                  "@babel/plugin-proposal-decorators",
+                  { decoratorsBeforeExport: true }
+                ],
+                "@babel/plugin-proposal-class-properties",
               ],
             },
           },
@@ -64,8 +69,6 @@ module.exports = {
     minimize: false,
   },
   externals: {
-    knex: 'knex',
-    bookshelf: 'bookshelf',
-    pg: 'pg',
+    typeorm: 'commonjs typeorm'
   },
 };
