@@ -26,7 +26,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(?:js|ts|tsx)$/,
+        test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
         use: [
           {
@@ -58,6 +58,7 @@ module.exports = {
     alias: {
       "@": cwd,
     },
+    extensions: ['.ts', '.tsx', '.js', '.json']
   },
   plugins: [new webpack.DefinePlugin(readEnv("PUBLIC"))],
   optimization: {

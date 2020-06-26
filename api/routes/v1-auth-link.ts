@@ -1,21 +1,18 @@
-import { APIGatewayProxyHandler } from 'aws-lambda'
+// import { APIGatewayProxyHandler } from 'aws-lambda'
+import { sql } from "slonik";
 
-import { MagicLink } from '@/db/models/MagicLink.ts';
+import { core } from "@/api/middleware/core";
+import { pool } from "@/db/pool.ts";
 
-export const handler: APIGatewayProxyHandler = async (event, context) => {
-  const link = await MagicLink.forge({
-    email: 'eric@gmail.com',
-    token: 'a',
-    browser_id: 'b',
-    expires_at: Date.now() + (5 * 60 * 1000),
-  }).save();
-  console.log(link.toJSON());
+export const handler = core(async (ev: any, ctx: any) => {
+  const query = await pool.query(sql`SELECT * FROM magic_link`);
+
+  console.log(query);
 
   return {
     statusCode: 200,
-    headers: {
-      'content-type': 'application/json',
+    body: {
+      query,
     },
-    body: '{}',
   };
-}
+});

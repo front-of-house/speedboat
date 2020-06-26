@@ -1,14 +1,12 @@
-import { APIGatewayProxyHandler } from 'aws-lambda'
+// import { APIGatewayProxyHandler } from 'aws-lambda'
+import { core } from "@/api/middleware/core";
 
-export const handler: APIGatewayProxyHandler = async (ev, ctx) => {
+export const handler = core(async (ev: any, ctx: any) => {
   return {
     statusCode: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+    body: {
       ev,
       ctx,
-    }),
+    },
   };
-}
+});
