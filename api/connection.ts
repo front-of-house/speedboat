@@ -1,3 +1,3 @@
-import { createPool } from 'slonik';
+import { createPool } from 'slonik'
 
-export const connection = createPool("postgresql://localhost:5432/sandbox");
+export const connection = createPool('postgresql://localhost:5432/sandbox')
