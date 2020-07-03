@@ -17,26 +17,26 @@ const post = POST(async (ev: any) => {
   // expire any existing active links
   await connection.query(
     sql`
-        update
+      update
         magic_link
-        set
+      set
         expires_at = to_timestamp(${now} / 1000.0)
-        where
+      where
         email = ${email} and expires_at > to_timestamp(${now} / 1000.0);
         `
   )
 
   const { rows } = await connection.query<Pick<AuthLink, 'browser_id'>>(
     sql`
-        insert into magic_link
+      insert into magic_link
         (email, token, browser_id, expires_at)
-        values (
-          ${email},
-          ${nanoid()},
-          ${nanoid()},
-          to_timestamp(${now + FIVE_MINUTES} / 1000.0)
-        )
-        returning browser_id;
+      values (
+        ${email},
+        ${nanoid()},
+        ${nanoid()},
+        to_timestamp(${now + FIVE_MINUTES} / 1000.0)
+      )
+      returning browser_id;
         `
   )
 
@@ -59,13 +59,14 @@ const get = GET(async (ev: any) => {
   const { token } = ev.queryStringParameters
 
   const { rows } = await connection.query<AuthLink>(
+    // prettier-ignore
     sql`
-          select
-            browser_id from magic_link
-          where
-            token = ${token}
-            and expires_at >= to_timestamp(${now} / 1000.0)
-        `
+      select
+        browser_id from magic_link
+      where
+        token = ${token}
+        and expires_at >= to_timestamp(${now} / 1000.0)
+    `
   )
 
   const obj = rows[0]
