@@ -34,14 +34,10 @@
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
-    "@babel/register": "^7.10.4",
-    "@types/aws-lambda": "^8.10.57",
-    "@types/bookshelf": "^1.1.1",
     "@types/http-errors": "^1.6.3",
     "@types/node": "^14.0.14",
     "@types/slonik": "^22.1.2",
     "babel-loader": "^8.1.0",
-    "better-sqlite3": "^7.1.0",
     "core-js": "^3.6.5",
     "husky": "^4.2.5",
     "matched": "^5.0.0",
@@ -54,12 +50,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sure-thing/magic-link-sandbox.git"
+    "url": "git+https://github.com/sure-thing/speedboat.git"
   },
   "author": "sure-thing",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sure-thing/magic-link-sandbox/issues"
+    "url": "https://github.com/sure-thing/speedboat/issues"
   },
-  "homepage": "https://github.com/sure-thing/magic-link-sandbox#readme"
+  "homepage": "https://github.com/sure-thing/speedboat#readme"
 }

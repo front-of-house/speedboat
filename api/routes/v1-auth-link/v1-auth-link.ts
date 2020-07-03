@@ -59,7 +59,6 @@ const get = GET(async (ev: any) => {
   const { token } = ev.queryStringParameters
 
   const { rows } = await connection.query<AuthLink>(
-    // prettier-ignore
     sql`
       select
         browser_id from magic_link
