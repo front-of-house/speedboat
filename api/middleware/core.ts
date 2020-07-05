@@ -1,4 +1,4 @@
-import { sstack, main, Handler } from 'sstack'
+import { sstack, Middleware } from 'sstack'
 // @ts-ignore
 import { parse, stringify } from '@sstack/json'
 // @ts-ignore
@@ -13,19 +13,26 @@ import validate from '@sstack/validate'
 import errors from '@sstack/errors'
 
 import { body } from '@/api/middleware/body'
-// const customErrorHandler = require('@/api/middleware/errors.js')
+import { setBrowserId } from '@/api/middleware/auth'
 
-export function core (...handlers: Handler[]) {
+export function core (...middlewares: Middleware[]) {
   return sstack(
     [
       parse(),
       parseCookies(),
-      main(handlers),
+      setBrowserId(),
+      ...middlewares,
       body(),
       serializeCookies(),
       stringify(),
       helmet()
     ],
-    [errors(), stringify()]
+    [
+      req => {
+        console.error(req)
+      },
+      errors(),
+      stringify()
+    ]
   )
 }
