@@ -11,7 +11,7 @@ module.exports = {
     path: path.join(cwd, 'build/api')
   },
   entry: match
-    .sync(path.join(cwd, '/api/routes/**/*'))
+    .sync(path.join(cwd, '/api/routes/**/*'), { ignore: ['**/__tests__/**'] })
     .reduce((entries, file) => {
       return {
         ...entries,

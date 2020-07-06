@@ -7,12 +7,20 @@
     "start": "NODE_ENV=development rm -rf build && webpack -w",
     "netlify": "NODE_ENV=development netlify dev",
     "build": "NODE_ENV=production rm -rf build && webpack",
-    "format": "prettier-standard --format"
+    "format": "prettier-standard --format",
+    "test": "NODE_ENV=test npx babel-node api/**/__tests__/*.test.ts -x '.ts'",
+    "test:db": "docker run --rm -d -p 5433:5432 --name speedboat_test_db postgres:11.1 -c fsync=off",
+    "test:db:migrate": "NODE_ENV=test knex-migrate up --cwd db",
+    "db:migrate": "knex-migrate up --cwd db",
+    "db:redo": "knex-migrate redo --cwd db"
   },
   "husky": {
     "hooks": {
       "pre-commit": "prettier-standard --format --staged"
     }
+  },
+  "_moduleAliases": {
+    "@": "."
   },
   "dependencies": {
     "@sstack/cookies": "^1.0.0-y.0",
@@ -30,18 +38,23 @@
   },
   "devDependencies": {
     "@babel/core": "^7.10.4",
+    "@babel/node": "^7.10.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.10.4",
     "@babel/plugin-transform-async-to-generator": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
+    "@babel/register": "^7.10.4",
     "@types/http-errors": "^1.6.3",
     "@types/node": "^14.0.14",
     "@types/slonik": "^22.1.2",
     "babel-loader": "^8.1.0",
+    "baretest": "^2.0.0",
     "core-js": "^3.6.5",
     "husky": "^4.2.5",
+    "knex-migrate": "^1.7.4",
     "matched": "^5.0.0",
+    "module-alias": "^2.2.2",
     "prettier-standard": "^16.3.0",
     "read-env": "^2.0.0",
     "ts-node": "^8.10.2",

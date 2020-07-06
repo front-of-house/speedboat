@@ -7,42 +7,42 @@ import { connection } from '@/api/connection.ts'
 import { guards } from '@/api/auth'
 import { decode } from '@/api/lib/decode'
 
-const FIVE_MINUTES = 5 * 60 * 1000
-
 const { NODE_ENV } = process.env
 const PROD = NODE_ENV === 'production'
 
 export const handler = core(
   POST(async event => {
-    const now = Date.now()
-
     const { email } = decode(event, guards.generateLinkPayload)
 
     // expire any existing active links
     await connection.query(
       sql`
         update
-          magic_link
+          auth_links
         set
-          expires_at = to_timestamp(${now} / 1000.0)
+          expires_at = now()
         where
-          email = ${email} and expires_at > to_timestamp(${now} / 1000.0);
+          email = ${email} and expires_at > now();
       `
     )
 
-    const browser_id = nanoid()
+    const device_id = nanoid()
 
-    const { rows } = await connection.query(
+    await connection.query(
       sql`
-        insert into magic_link
-          (email, token, browser_id, expires_at)
+        insert into auth_links (
+          email,
+          token,
+          device_id,
+          expires_at
+        )
         values (
           ${email},
           ${nanoid()},
-          ${browser_id},
-          to_timestamp(${now + FIVE_MINUTES} / 1000.0)
+          ${device_id},
+          now()::timestamp + interval '5 minutes'
         )
-        returning token;
+        returning *;
       `
     )
 
@@ -51,17 +51,19 @@ export const handler = core(
     return {
       statusCode: 201,
       cookies: {
-        sstack_browser_id: [
-          browser_id,
+        sstack_device_id: [
+          device_id,
           PROD
             ? {
                 secure: true,
                 httpOnly: true,
-                sameSite: 'strict'
+                sameSite: 'strict',
+                expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
               }
             : {
                 httpOnly: true,
-                sameSite: 'strict'
+                sameSite: 'strict',
+                expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
               }
         ]
       }

@@ -13,14 +13,12 @@ import validate from '@sstack/validate'
 import errors from '@sstack/errors'
 
 import { body } from '@/api/middleware/body'
-import { setBrowserId } from '@/api/middleware/auth'
 
 export function core (...middlewares: Middleware[]) {
   return sstack(
     [
       parse(),
       parseCookies(),
-      setBrowserId(),
       ...middlewares,
       body(),
       serializeCookies(),
