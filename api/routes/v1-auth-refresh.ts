@@ -1,9 +1,9 @@
-import { sql } from 'slonik'
 import { GET } from 'sstack'
 import createError from 'http-errors'
 
 import { core } from '@/api/middleware/core'
-import { connection } from '@/api/connection.ts'
+
+import { getSessionById, refreshSessionById } from '@/db/session'
 
 export const handler = core(
   GET(async event => {
@@ -14,16 +14,7 @@ export const handler = core(
       // TODO create anon session?
     }
 
-    const { rows: sessionResults } = await connection.query(
-      sql`
-        select * from sessions
-        where
-          id = ${sstack_session_id}
-          and device_id = ${sstack_device_id}
-          and expires_at > now();
-      `
-    )
-
+    const { rows: sessionResults } = await getSessionById(sstack_session_id)
     const session = sessionResults[0]
 
     if (!session) {
@@ -31,16 +22,7 @@ export const handler = core(
       // TODO create anon session?
     } else {
       // update expiry
-      await connection.query(
-        sql`
-          update sessions
-          set
-            expires_at = now() + interval '7 days'
-          where
-            id = ${sstack_session_id}
-            and device_id = ${sstack_device_id}
-        `
-      )
+      await refreshSessionById(sstack_session_id)
     }
 
     return {

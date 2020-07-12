@@ -1,26 +1,16 @@
-import { sql } from 'slonik'
 import { GET } from 'sstack'
 
 import { core } from '@/api/middleware/core'
-import { connection } from '@/api/connection.ts'
+import { expireSessionById } from '@/db/session'
 
 const { NODE_ENV } = process.env
 const PROD = NODE_ENV === 'production'
 
 export const handler = core(
   GET(async event => {
-    const { sstack_session_id, sstack_device_id } = event.cookies
+    const { sstack_session_id } = event.cookies
 
-    await connection.query(
-      sql`
-        update sessions
-        set
-          expires_at = now()
-        where
-          id = ${sstack_session_id}
-          and device_id = ${sstack_device_id};
-      `
-    )
+    await expireSessionById(sstack_session_id)
 
     return {
       statusCode: 204,

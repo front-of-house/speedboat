@@ -14,6 +14,8 @@ import errors from '@sstack/errors'
 
 import { body } from '@/api/middleware/body'
 
+const { NODE_ENV } = process.env
+
 export function core (...middlewares: Middleware[]) {
   return sstack(
     [
@@ -27,7 +29,7 @@ export function core (...middlewares: Middleware[]) {
     ],
     [
       req => {
-        console.error(req)
+        if (NODE_ENV !== 'test') console.error(req.error)
       },
       errors(),
       stringify()

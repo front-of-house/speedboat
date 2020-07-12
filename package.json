@@ -4,15 +4,20 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-    "start": "NODE_ENV=development rm -rf build && webpack -w",
-    "netlify": "NODE_ENV=development netlify dev",
-    "build": "NODE_ENV=production rm -rf build && webpack",
-    "format": "prettier-standard --format",
-    "test": "NODE_ENV=test npx babel-node api/**/__tests__/*.test.ts -x '.ts'",
-    "test:db": "docker run --rm -d -p 5433:5432 --name speedboat_test_db postgres:11.1 -c fsync=off",
+    "dev:watch": "NODE_ENV=development rm -rf build && webpack -w",
+    "dev:serve": "NODE_ENV=development netlify dev",
+    "prod:build": "NODE_ENV=production rm -rf build && webpack",
+    "dev:db:start": "docker run --rm -d -p 5434:5432 --name speedboat_dev_db -e POSTGRES_DB=speedboat_dev_db postgres:11.1 -c fsync=off",
+    "dev:db:stop": "docker stop speedboat_dev_db",
+    "dev:db:migrate": "NODE_ENV=development knex-migrate up --cwd db",
+    "dev:db:clean": "NODE_ENV=development knex-migrate redo --cwd db",
+    "test:db:start": "docker run --rm -d -p 5433:5432 --name speedboat_test_db -e POSTGRES_DB=speedboat_test_db postgres:11.1 -c fsync=off",
+    "test:db:stop": "docker stop speedboat_test_db",
     "test:db:migrate": "NODE_ENV=test knex-migrate up --cwd db",
-    "db:migrate": "knex-migrate up --cwd db",
-    "db:redo": "knex-migrate redo --cwd db"
+    "test:db:clean": "NODE_ENV=test knex-migrate redo --cwd db",
+    "test:api": "NODE_ENV=test ava api/**/*.test.ts --verbose",
+    "test:db": "NODE_ENV=test ava db/**/*.test.ts --verbose",
+    "lint:format": "prettier-standard --format"
   },
   "husky": {
     "hooks": {
@@ -23,7 +28,8 @@
     "@": "."
   },
   "dependencies": {
-    "@sstack/cookies": "^1.0.0-y.0",
+    "@sendgrid/mail": "^7.2.1",
+    "@sstack/cookies": "^1.0.0-y.1",
     "@sstack/errors": "^0.1.4",
     "@sstack/helmet": "^0.1.4",
     "@sstack/json": "^0.1.4",
@@ -34,9 +40,10 @@
     "nanoid": "^3.1.10",
     "pg": "^8.2.1",
     "slonik": "^22.4.11",
-    "sstack": "^1.0.0-y.0"
+    "sstack": "^1.0.0-y.1"
   },
   "devDependencies": {
+    "@ava/babel": "^1.0.1",
     "@babel/core": "^7.10.4",
     "@babel/node": "^7.10.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.10.4",
@@ -47,7 +54,9 @@
     "@babel/register": "^7.10.4",
     "@types/http-errors": "^1.6.3",
     "@types/node": "^14.0.14",
+    "@types/sinon": "^9.0.4",
     "@types/slonik": "^22.1.2",
+    "ava": "^3.10.1",
     "babel-loader": "^8.1.0",
     "baretest": "^2.0.0",
     "core-js": "^3.6.5",
@@ -57,6 +66,7 @@
     "module-alias": "^2.2.2",
     "prettier-standard": "^16.3.0",
     "read-env": "^2.0.0",
+    "sinon": "^9.0.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.6",
     "webpack": "^4.43.0",

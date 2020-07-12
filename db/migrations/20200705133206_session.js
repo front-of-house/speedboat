@@ -2,6 +2,7 @@ exports.up = async function (knex) {
   await knex.schema.raw(`
     create table if not exists sessions (
       id serial primary key,
+      session_id varchar(32) unique not null,
       user_id integer not null references users(id),
       device_id varchar(32) not null,
       expires_at TIMESTAMP not null default (now()::timestamp + interval '7 days')

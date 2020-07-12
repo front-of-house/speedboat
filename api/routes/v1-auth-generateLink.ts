@@ -1,52 +1,34 @@
-import { sql } from 'slonik'
 import { nanoid } from 'nanoid'
 import { POST } from 'sstack'
 
 import { core } from '@/api/middleware/core'
-import { connection } from '@/api/connection.ts'
 import { guards } from '@/api/auth'
 import { decode } from '@/api/lib/decode'
+import { sendAuthLink } from '@/api/auth/email'
+import { createAuthLink, expireAuthLinksByEmail } from '@/db/auth'
 
 const { NODE_ENV } = process.env
 const PROD = NODE_ENV === 'production'
 
 export const handler = core(
   POST(async event => {
+    // TODO middleware this
     const { email } = decode(event, guards.generateLinkPayload)
 
-    // expire any existing active links
-    await connection.query(
-      sql`
-        update
-          auth_links
-        set
-          expires_at = now()
-        where
-          email = ${email} and expires_at > now();
-      `
-    )
+    await expireAuthLinksByEmail(email)
 
     const device_id = nanoid()
 
-    await connection.query(
-      sql`
-        insert into auth_links (
-          email,
-          token,
-          device_id,
-          expires_at
-        )
-        values (
-          ${email},
-          ${nanoid()},
-          ${device_id},
-          now()::timestamp + interval '5 minutes'
-        )
-        returning *;
-      `
-    )
+    await createAuthLink({
+      email,
+      token: nanoid(),
+      device_id
+    })
 
-    // TODO send email
+    sendAuthLink({
+      to: email,
+      link: `http://localhost:8888/api/v1/auth/validateLink`
+    })
 
     return {
       statusCode: 201,
