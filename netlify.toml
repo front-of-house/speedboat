@@ -1,2 +1,3 @@
 [build]
-  functions = "./build/api"
+  publish = "./build/app"
+  functions = "./build/functions"

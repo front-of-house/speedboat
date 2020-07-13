@@ -17,17 +17,18 @@ export const handler = core(
 
     await expireAuthLinksByEmail(email)
 
+    const token = nanoid()
     const device_id = nanoid()
 
     await createAuthLink({
       email,
-      token: nanoid(),
+      token,
       device_id
     })
 
     sendAuthLink({
       to: email,
-      link: `http://localhost:8888/api/v1/auth/validateLink`
+      link: `http://localhost:8888/sign-in/${token}`
     })
 
     return {

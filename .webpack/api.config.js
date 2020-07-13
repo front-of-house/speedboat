@@ -8,7 +8,7 @@ module.exports = {
   ...base,
   output: {
     ...base.output,
-    path: path.join(cwd, 'build/api')
+    path: path.join(cwd, 'build/functions')
   },
   entry: match
     .sync(path.join(cwd, '/api/routes/**/*'), { ignore: ['**/__tests__/**'] })

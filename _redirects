@@ -1,2 +1,4 @@
 /api/:path /.netlify/functions/:path 200
 /api/:version/:resource/* /.netlify/functions/:version-:resource-:splat 200
+/static/:path /static/:path 200
+* /.netlify/functions/appServer 200
